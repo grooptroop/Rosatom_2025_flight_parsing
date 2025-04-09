@@ -6,6 +6,49 @@
 
 Запустите главный файл: python -m app.app
 
+----------------------------------------------------------------------------------------------------------------------------------
+
+Создание таблиц:
+
+
+CREATE TABLE flights (
+    id SERIAL PRIMARY KEY,
+    flight_number VARCHAR(10) NOT NULL,
+    airline VARCHAR(50) NOT NULL,
+    origin CHAR(3) NOT NULL,
+    destination CHAR(3) NOT NULL,
+    scheduled_time TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    aircraft_model VARCHAR(50) NOT NULL,
+    icao_code CHAR(4) NOT NULL,
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    scheduled_departure TIMESTAMP NOT NULL
+);
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE daily_flight_summary (
+    id SERIAL PRIMARY KEY,
+    flight_day DATE NOT NULL,
+    airline VARCHAR(50) NOT NULL,
+    aircraft_model VARCHAR(50) NOT NULL,
+    total_flights INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE hourly_flight_summary (
+    id SERIAL PRIMARY KEY,
+    flight_hour TIMESTAMP NOT NULL,
+    airline VARCHAR(30) NOT NULL,
+    aircraft_model VARCHAR(10) NOT NULL,
+    total_flights INTEGER NOT NULL
+);
+
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
