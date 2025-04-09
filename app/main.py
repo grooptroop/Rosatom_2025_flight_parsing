@@ -1,9 +1,3 @@
-import os
-from dotenv import load_dotenv
-
-# Загружаем переменные из .env
-load_dotenv()
-
 from data_parser.parser import main_parser
 from data_digest.digest import main_digest
 

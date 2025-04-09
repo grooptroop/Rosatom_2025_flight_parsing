@@ -106,14 +106,14 @@ class AirportGeocoder:
 
 
 def get_db_connection():
-    return psycopg2.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT")
+    conn = psycopg2.connect(
+        dbname="air_data",
+        user="postgres",
+        password="rosatom",
+        host="localhost",
+        port="5432"
     )
-
+    return conn
 
 def load_flights_data() -> pd.DataFrame:
     try:

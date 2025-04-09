@@ -101,11 +101,11 @@ def main_parser():
     # защитить доступ к важной информацией переменной окружения (занести в докерфайл)
 
     db_config = {
-        "host": os.getenv("DB_HOST"),
-        "database": os.getenv("DB_NAME"),
-        "user": os.getenv("DB_USER"),
-        "password": os.getenv("DB_PASSWORD"),
-        "port": os.getenv("DB_PORT")
+        "host": "localhost",
+        "database": "air_data",
+        "user": "postgres",
+        "password": "rosatom",
+        "port": "5432"
     }
 
 
