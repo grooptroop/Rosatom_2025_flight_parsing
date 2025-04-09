@@ -1,11 +1,10 @@
 import requests
 from datetime import datetime
 import time
-from app.data_parser.database import FlightDatabase
-from app.collections_day_and_hour.day_collections import FlightReport
+from .database import FlightDatabase
+from ..collections_day_and_hour.day_collections import FlightReport
+from ..collections_day_and_hour.hour_collections import HourlyFlightReport
 import logging
-from app.collections_day_and_hour.hour_collections import HourlyFlightReport
-import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -63,7 +62,7 @@ class FlightParser:
                 "code": airport,
                 "plugin[]": "schedule",
                 "plugin-setting[schedule][mode]": "arrivals",
-                "limit": 20
+                "limit": 20 # в данном случае мы останавливаемся на 20 записях для наглядного предстовления итогового результата, если в дальнейшем нам понадобится взять все данные из каждого перелёта огрпничение можно убрать
             }
 
             response = self.session.get(url, params=params, timeout=15)
@@ -96,10 +95,9 @@ class FlightParser:
             logger.error(f"Unexpected error for {airport}: {e}")
             return False
 
-def main_parser():
+def main_parser(date_from: str, date_to: str, hour: int):
 
     # защитить доступ к важной информацией переменной окружения (занести в докерфайл)
-
     db_config = {
         "host": "localhost",
         "database": "air_data",
@@ -115,18 +113,16 @@ def main_parser():
     hourly_reporter = HourlyFlightReport(db_config)
 
     airports = ["AER", "GDZ", "AAQ", "SIP", "KHE", "NLV", "ODS", "CND", "VAR", "BOJ", "IST", "ONQ", "NOP", "SZF", "OGU", "TZX", "RZV", "BUS", "KUT"]
-    while True:
-        for airport in airports:
-            parser.process_airport(airport)
+    for airport in airports:
+        parser.process_airport(airport)
 
-        logger.info("Цикл закончен, 5 минут до повторного парсинга...")
-        summary = reporter.get_flight_summary(icao_codes=airports, date_from="2025-04-07", date_to="2025-04-08")
-        data = hourly_reporter.get_hourly_summary(icao_codes=airports, hour=14)
 
-        reporter.save_summary_to_db(summary)
-        hourly_reporter.save_hourly_summary(data)
+    summary = reporter.get_flight_summary(icao_codes=airports, date_from=date_from, date_to=date_to)
+    data = hourly_reporter.get_hourly_summary(icao_codes=airports, hour=hour)
 
-        time.sleep(300)
+    reporter.save_summary_to_db(summary)
+    hourly_reporter.save_hourly_summary(data)
+
 
 
 
